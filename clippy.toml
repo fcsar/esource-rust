@@ -1,0 +1,3 @@
+# Clippy — linter do Rust
+# Limita complexidade cognitiva das funções (padrão é 25, vamos ser mais restritivos)
+cognitive-complexity-threshold = 20
