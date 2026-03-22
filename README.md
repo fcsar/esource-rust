@@ -36,11 +36,46 @@ Every financial movement (credit/debit) is stored as an immutable event. Account
 | chrono | Date/time |
 | uuid | Unique identifiers |
 
+## Prerequisites
+
+- [Rust](https://www.rust-lang.org/tools/install) (stable)
+- [Docker](https://docs.docker.com/get-docker/)
+
 ## Getting Started
+
+### 1. Start PostgreSQL
+
+```bash
+docker compose up -d
+```
+
+This starts a PostgreSQL 17 container on port **5433** with:
+- Database: `edriven`
+- User: `edriven`
+- Password: `edriven`
+
+### 2. Set up environment
+
+```bash
+cp .env.example .env
+```
+
+### 3. Build and run
 
 ```bash
 cargo build
 cargo run
+```
+
+### Useful commands
+
+```bash
+docker compose up -d      # start database
+docker compose down        # stop database
+docker compose down -v     # stop and delete all data
+docker logs edriven-db     # check database logs
+cargo fmt                  # format code
+cargo clippy               # lint
 ```
 
 ## Project Status

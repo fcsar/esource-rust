@@ -1,0 +1,15 @@
+services:
+  postgres:
+    image: postgres:17
+    container_name: edriven-db
+    ports:
+      - "5433:5432"
+    environment:
+      POSTGRES_USER: edriven
+      POSTGRES_PASSWORD: edriven
+      POSTGRES_DB: edriven
+    volumes:
+      - edriven_data:/var/lib/postgresql/data
+
+volumes:
+  edriven_data:
