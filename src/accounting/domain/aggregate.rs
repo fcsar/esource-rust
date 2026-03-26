@@ -22,14 +22,6 @@ impl Account {
         }
     }
 
-    pub fn rebuild(id: AccountId, events: &[Event]) -> Self {
-        let mut account = Self::empty(id);
-        for event in events {
-            account.apply(event);
-        }
-        account
-    }
-
     fn apply(&mut self, event: &Event) {
         match event {
             Event::AccountCreated { owner, .. } => {
@@ -43,6 +35,14 @@ impl Account {
                 self.balance = Amount(self.balance.0 - amount.0);
             }
         }
+    }
+
+    pub fn rebuild(id: AccountId, events: &[Event]) -> Self {
+        let mut account = Self::empty(id);
+        for event in events {
+            account.apply(event);
+        }
+        account
     }
 
     pub fn create_account(&self, owner: String) -> Result<Event, LedgerError> {
