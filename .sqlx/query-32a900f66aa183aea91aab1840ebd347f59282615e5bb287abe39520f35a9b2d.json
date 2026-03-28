@@ -1,0 +1,16 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "UPDATE account_balances\n                 SET balance = balance + $1, last_event_id = $2, updated_at = now()\n                 WHERE account_id = $3 AND last_event_id != $2",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Int8",
+        "Uuid",
+        "Uuid"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "32a900f66aa183aea91aab1840ebd347f59282615e5bb287abe39520f35a9b2d"
+}

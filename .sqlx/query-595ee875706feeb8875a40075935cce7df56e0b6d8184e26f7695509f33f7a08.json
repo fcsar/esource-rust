@@ -1,0 +1,18 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "INSERT INTO transaction_history (id, account_id, event_type, amount, balance_after, created_at)\n                 SELECT $1, $2, $3, $4,\n                        (SELECT balance FROM account_balances WHERE account_id = $2),\n                        $5\n                 WHERE NOT EXISTS (SELECT 1 FROM transaction_history WHERE id = $1)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Uuid",
+        "Uuid",
+        "Varchar",
+        "Int8",
+        "Timestamptz"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "595ee875706feeb8875a40075935cce7df56e0b6d8184e26f7695509f33f7a08"
+}

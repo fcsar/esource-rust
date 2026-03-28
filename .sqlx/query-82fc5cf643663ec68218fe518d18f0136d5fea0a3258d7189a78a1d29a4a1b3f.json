@@ -1,0 +1,14 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "UPDATE event_outbox SET status = 'done', processed_at = now() WHERE id = $1",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Left": [
+        "Uuid"
+      ]
+    },
+    "nullable": []
+  },
+  "hash": "82fc5cf643663ec68218fe518d18f0136d5fea0a3258d7189a78a1d29a4a1b3f"
+}
