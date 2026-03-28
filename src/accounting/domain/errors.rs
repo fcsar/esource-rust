@@ -14,6 +14,9 @@ pub enum LedgerError {
     #[error("invalid amount: must be greater than zero")]
     InvalidAmount,
 
+    #[error("unknown event type: {0}")]
+    UnknownEventType(String),
+
     #[error("database error: {0}")]
     Database(#[from] sqlx::Error),
 }

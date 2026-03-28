@@ -1,0 +1,47 @@
+### Create Account
+POST http://localhost:3000/accounts
+Content-Type: application/json
+
+{
+    "owner": "Francisco"
+}
+
+### Deposit (replace ID with the account_id from create response)
+POST http://localhost:3000/accounts/REPLACE_WITH_ACCOUNT_ID/deposit
+Content-Type: application/json
+
+{
+    "amount": 50000
+}
+
+### Withdraw (replace ID with the account_id from create response)
+POST http://localhost:3000/accounts/REPLACE_WITH_ACCOUNT_ID/withdraw
+Content-Type: application/json
+
+{
+    "amount": 15000
+}
+
+### Deposit invalid amount
+POST http://localhost:3000/accounts/REPLACE_WITH_ACCOUNT_ID/deposit
+Content-Type: application/json
+
+{
+    "amount": -100
+}
+
+### Withdraw insufficient funds
+POST http://localhost:3000/accounts/REPLACE_WITH_ACCOUNT_ID/withdraw
+Content-Type: application/json
+
+{
+    "amount": 99999999
+}
+
+### Account not found
+POST http://localhost:3000/accounts/00000000-0000-0000-0000-000000000000/deposit
+Content-Type: application/json
+
+{
+    "amount": 1000
+}

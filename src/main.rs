@@ -5,7 +5,17 @@
 mod accounting;
 mod shared;
 
+use std::sync::Arc;
+
+use axum::routing::post;
+use axum::Router;
 use sqlx::postgres::PgPoolOptions;
+use tokio::net::TcpListener;
+
+use crate::accounting::application::command_handler::CommandHandler;
+use crate::accounting::application::query_handler::QueryHandler;
+use crate::accounting::infra::http::{handlers, queries};
+use crate::accounting::infra::pg::event_store::PgEventStore;
 
 #[tokio::main]
 async fn main() {
@@ -16,7 +26,8 @@ async fn main() {
     tracing::info!("edriven ledger starting...");
     dotenvy::dotenv().ok();
 
-    let database_url = std::env::var("DATABASE_URL").expect("DATABASE_URL must be set in .env");
+    let database_url =
+        std::env::var("DATABASE_URL").expect("DATABASE_URL must be set in .env");
 
     let pool = PgPoolOptions::new()
         .max_connections(10)
@@ -26,10 +37,30 @@ async fn main() {
 
     tracing::info!("connected to database");
 
-    let row: (i32,) = sqlx::query_as("SELECT 1")
-        .fetch_one(&pool)
-        .await
-        .expect("failed to execute test query");
+    let worker_pool = pool.clone();
+    tokio::spawn(accounting::worker::projection::run(worker_pool));
 
-    tracing::info!(result = row.0, "database test query ok");
+    let query_pool = pool.clone();
+    let store = PgEventStore::new(pool);
+    let command_state = Arc::new(CommandHandler::new(store));
+    let query_state = Arc::new(QueryHandler::new(query_pool));
+
+    let command_routes = Router::new()
+        .route("/accounts", post(handlers::create_account))
+        .route("/accounts/{id}/deposit", post(handlers::deposit))
+        .route("/accounts/{id}/withdraw", post(handlers::withdraw))
+        .with_state(command_state);
+
+    let query_routes = Router::new()
+        .route("/accounts/{id}/balance", axum::routing::get(queries::get_balance))
+        .route("/accounts/{id}/statement", axum::routing::get(queries::get_statement))
+        .route("/replay", post(queries::replay))
+        .with_state(query_state);
+
+    let app = command_routes.merge(query_routes);
+
+    let listener = TcpListener::bind("0.0.0.0:3000").await.unwrap();
+    tracing::info!("listening on http://localhost:3000");
+
+    axum::serve(listener, app).await.unwrap();
 }
