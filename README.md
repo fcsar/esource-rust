@@ -1,6 +1,6 @@
 # edriven
 
-Financial Ledger built with CQRS + Event Sourcing in Rust and PostgreSQL.
+Financial Ledger built with CQRS + Event Sourcing in Rust and PostgreSQL. 
 
 Every financial movement (credit/debit) is stored as an immutable event. Account balances and statements are derived from read models updated asynchronously by a projection worker.
 
