@@ -4,6 +4,7 @@
 
 Projeto de estudo para aprender Rust, CQRS, Event Sourcing e PostgreSQL avançado através da construção de um Ledger Financeiro — sistema onde cada movimentação (crédito/débito) é um evento imutável, e a leitura (saldo, extrato) vem de read models separadas, atualizadas de forma assíncrona.
 
+
 ## Arquitetura Geral
 
 O sistema segue dois padrões complementares:
